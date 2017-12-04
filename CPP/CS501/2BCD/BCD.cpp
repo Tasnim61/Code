@@ -14,12 +14,12 @@ using namespace std;
 
 //constructor
 Node::Node() {
-   data = 0;
+   root = 0;
    next = nullptr;
 }
 
 Node::Node(int val) {
-   data = val;
+   root = val;
    next = nullptr;
 }
 
@@ -39,7 +39,7 @@ BCD::BCD(int val)
    while (true)
    {
       int digit = value % 10;
-      curr->data = (digit < 0) ? -digit : digit;
+      curr->root = (digit < 0) ? -digit : digit;
 
       value = value / 10;
       if (value == 0)
@@ -94,12 +94,12 @@ Node* LinkedList::copyNodeList(const Node* n)
    if (n == nullptr)
       return nullptr;
 
-   Node* result = new Node(n->data);;
+   Node* result = new Node(n->root);;
    Node* curr = result;
 
    while (n->next != nullptr)
    {
-      curr->next = new Node(n->next->data);
+      curr->next = new Node(n->next->root);
       n = n->next;
       curr = curr->next;
    }
@@ -185,7 +185,7 @@ void BCD::printBCD(ostream& output)
 
    while (curr != nullptr)
    {
-      char c = '0' + curr->data;
+      char c = '0' + curr->root;
       s = c + s;
       curr = curr->next;
    }
@@ -238,9 +238,9 @@ int LinkedList::compareTwoList(const Node* a, const Node* b) {
 
    if (ret == 0)
    {
-      if (a->data < b->data)
+      if (a->root < b->root)
          return -1;//a<b
-      else if (a->data > b->data)
+      else if (a->root > b->root)
          return 1;//a>b
       else
          return 0;//equal
@@ -261,7 +261,7 @@ BCD::operator int() const
    try {
       while (curr != nullptr)
       {
-         ans = i * curr->data + ans;
+         ans = i * curr->root + ans;
          if (ans*sign > INT_MAX || ans*sign < INT_MIN)
             throw "BCD cannot convert to int because of integer overflow";
          i = i * 10;
@@ -374,7 +374,7 @@ BCD BCD:: operator *(const BCD& bcd)
       while (m1Curr != nullptr || carry > 0)
       {
          // calculate the current digit for temp BCD and carry value
-         int value = (m1Curr == nullptr ? 0 : m1Curr->data)*(m2Head == nullptr? 0 : m2Head->data) + carry;
+         int value = (m1Curr == nullptr ? 0 : m1Curr->root)*(m2Head == nullptr? 0 : m2Head->root) + carry;
          carry = 0;
 
          if (value > 9) 
@@ -382,7 +382,7 @@ BCD BCD:: operator *(const BCD& bcd)
             carry = value / 10;
             value = value % 10;
          }
-         tempCurr->data = value;
+         tempCurr->root = value;
 
          if (m1Curr != nullptr)
             m1Curr = m1Curr->next;
@@ -443,7 +443,7 @@ BCD BCD:: operator /(const BCD& bcd)
    // if this == bcd, then this/bcd = 1
    if (compareList == 0)
    {
-      ans.head->data = 1;
+      ans.head->root = 1;
       return ans;
    }
 
@@ -466,7 +466,7 @@ BCD BCD:: operator /(const BCD& bcd)
          }
 
          // build up the subDividend from the dividend
-         LinkedList::addToFront(subDividend.head, currDividend->data);
+         LinkedList::addToFront(subDividend.head, currDividend->root);
          LinkedList::deleteZerosFromEndofTheList(subDividend.head);
 
          //advance the currDividend until finish
@@ -502,9 +502,9 @@ BCD BCD:: operator /(const BCD& bcd)
    }
 }
 
-void LinkedList::addToFront(Node*& head, int data)
+void LinkedList::addToFront(Node*& head, int root)
 {
-   Node* n = new Node(data);
+   Node* n = new Node(root);
    n->next = head;
    head = n;
 }
@@ -530,9 +530,9 @@ Node* LinkedList::sum(Node* a, const Node* b)
 
    while (a != nullptr || b != nullptr || carry > 0)
    {
-      int data = ((a != nullptr) ? a->data : 0) + ((b != nullptr) ? b->data : 0) + carry;
-      n->data = data % 10;
-      carry = data / 10;
+      int root = ((a != nullptr) ? a->root : 0) + ((b != nullptr) ? b->root : 0) + carry;
+      n->root = root % 10;
+      carry = root / 10;
       
       if (a != nullptr)
          a = a->next;
@@ -563,8 +563,8 @@ Node* LinkedList::sub(const Node* a, const Node* b)
    while (a != nullptr || carry > 0)
    {
       //calculate aVal (from a), bVal (from b) and carry (for the next step)
-      int aVal = (a != nullptr) ? a->data : 0;
-      int bVal = (b != nullptr ? b->data : 0) + carry;
+      int aVal = (a != nullptr) ? a->root : 0;
+      int bVal = (b != nullptr ? b->root : 0) + carry;
       carry = 0;
 
       if (bVal > 9)
@@ -579,8 +579,8 @@ Node* LinkedList::sub(const Node* a, const Node* b)
       }
 
       // set digit to result list
-      int data = aVal - bVal;
-      curr->data = data;
+      int root = aVal - bVal;
+      curr->root = root;
 
       // advance to next digit
       a = a->next;
@@ -599,7 +599,7 @@ Node* LinkedList::sub(const Node* a, const Node* b)
    {
       while (a != nullptr)
       {
-         curr->data = a->data;
+         curr->root = a->root;
          a = a->next;
          if (a != nullptr)
          {
@@ -631,7 +631,7 @@ void LinkedList::deleteZerosFromEndofTheList(Node* head)
 
    LinkedList::deleteZerosFromEndofTheList(head->next);
 
-   if (head && head->next && head->next->data == 0 && head->next->next == nullptr)
+   if (head && head->next && head->next->root == 0 && head->next->next == nullptr)
    {
       delete head->next;
       head->next = nullptr;
